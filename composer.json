@@ -1,0 +1,13 @@
+{
+    "name": "nicolasey/forum",
+    "description": "Forum package for a Laravel based API",
+    "type": "library",
+    "authors": [
+        {
+            "name": "nicolasey",
+            "email": "nicolas.sey@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
