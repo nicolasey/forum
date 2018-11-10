@@ -13,7 +13,7 @@ class Forum extends Model
 
     protected $guarded = [];
     protected $table = "forum_forums";
-    protected $with = ['lastPost'];
+    protected $with = ['lastPost', 'children', 'children.lastPost', 'children.lastPost.author'];
 
     /**
      * Get the options for generating the slug.

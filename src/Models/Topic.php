@@ -53,14 +53,4 @@ class Topic extends Model
     {
         return $this->posts()->latest(['created_at']);
     }
-
-    /**
-     * Get the author
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
-     */
-    public function author()
-    {
-        return $this->morphTo("author");
-    }
 }

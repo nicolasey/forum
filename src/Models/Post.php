@@ -1,10 +1,10 @@
 <?php
 namespace Nicolasey\Forum\Models;
 
-use Cmgmyr\Messenger\Models\Message;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Post extends Message
+class Post extends Model
 {
     use SoftDeletes;
 
@@ -16,4 +16,24 @@ class Post extends Message
      * @var array
      */
     protected $touches = ['topic'];
+
+    /**
+     * Get the author
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function author()
+    {
+        return $this->morphTo("author");
+    }
+
+    /**
+     * Post's topic
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function topic()
+    {
+        return $this->belongsTo(Topic::class);
+    }
 }
