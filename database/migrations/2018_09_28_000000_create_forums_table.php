@@ -17,9 +17,12 @@ class CreateForumsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('slug')->unique();
+            $table->text("content")->nullable();
             $table->unsignedMediumInteger("last_post")->nullable();
             $table->timestamps();
             $table->softDeletes();
+            // missing nested elements
+            $table->nestedSet();
         });
     }
     /**
