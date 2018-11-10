@@ -1,0 +1,31 @@
+<?php
+namespace Nicolasey\Forum;
+
+use Illuminate\Support\ServiceProvider;
+
+class ForumServiceProvider extends ServiceProvider
+{
+    protected $namespace = "Nicolasey\Forum\Http\Controllers";
+
+    public function boot()
+    {
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->mergeConfigFrom(__DIR__.'/../config.php', 'forum');
+
+        $this->mapApiRoutes();
+    }
+
+    public function register()
+    {
+        //
+    }
+
+    private function mapApiRoutes()
+    {
+        Route::namespace($this->namespace)
+            ->middleware("api")
+            ->group(function () {
+                require __DIR__.'/routes/api.php';
+            });
+    }
+}
