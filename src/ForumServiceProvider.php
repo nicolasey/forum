@@ -2,6 +2,7 @@
 namespace Nicolasey\Forum;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class ForumServiceProvider extends ServiceProvider
 {
