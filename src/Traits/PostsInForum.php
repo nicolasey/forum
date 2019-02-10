@@ -14,4 +14,14 @@ trait PostsInForum
     {
         return $this->morphMany(Post::class, "author");
     }
+
+    /**
+     * User posts nb
+     *
+     * @return int
+     */
+    public function nbPosts()
+    {
+        return $this->posts()->count();
+    }
 }
