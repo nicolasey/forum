@@ -16,7 +16,7 @@ class CreatePostsTable extends Migration
         Schema::create("forum_posts", function (Blueprint $table) {
             $table->increments('id');
             $table->integer('topic_id')->unsigned();
-            $table->integer('author')->unsigned();
+            $table->morphs("author");
             $table->text('body');
             $table->timestamps();
             $table->softDeletes();

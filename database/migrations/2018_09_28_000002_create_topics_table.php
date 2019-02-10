@@ -19,6 +19,7 @@ class CreateTopicsTable extends Migration
             $table->string('slug')->unique();
             $table->timestamps();
             $table->softDeletes();
+            $table->unsignedMediumInteger("forum_id");
         });
     }
     /**
