@@ -9,6 +9,7 @@ class Post extends Model
     use SoftDeletes;
 
     protected $table = "forum_posts";
+    protected $with = ['author'];
 
     /**
      * The relationships that should be touched on save.
