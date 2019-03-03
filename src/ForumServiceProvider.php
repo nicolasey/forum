@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 class ForumServiceProvider extends ServiceProvider
 {
-    protected $namespace = "Nicolasey\Forum\Http\Controllers";
+    protected $namespace = "Nicolasey\Forum\Http\Controller";
 
     public function boot()
     {
@@ -25,6 +25,7 @@ class ForumServiceProvider extends ServiceProvider
     {
         Route::namespace($this->namespace)
             ->middleware("api")
+            ->prefix('api')
             ->group(function () {
                 require __DIR__.'/routes/api.php';
             });
