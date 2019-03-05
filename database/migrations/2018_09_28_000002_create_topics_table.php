@@ -20,6 +20,7 @@ class CreateTopicsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->unsignedMediumInteger("forum_id");
+            $table->unsignedMediumInteger("last_post")->nullable();
         });
     }
     /**
