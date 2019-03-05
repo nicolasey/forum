@@ -13,7 +13,7 @@ class Forum extends Model
 
     protected $guarded = [];
     protected $table = "forum_forums";
-    protected $with = ['lastPost', 'children', 'children.lastPost', 'children.lastPost.author'];
+    protected $with = ["children", "topics"];
 
     /**
      * Get the options for generating the slug.
@@ -25,6 +25,11 @@ class Forum extends Model
             ->saveSlugsTo('slug');
     }
 
+    /**
+     * Forum's topics
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function topics()
     {
         return $this->hasMany(Topic::class);
@@ -32,6 +37,8 @@ class Forum extends Model
 
     /**
      * Last post for the scope is kept in the object to avoid useless things
+     *
+     * @returns \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function lastPost()
     {

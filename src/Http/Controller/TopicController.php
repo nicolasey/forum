@@ -15,7 +15,8 @@ class TopicController extends Controller
      */
     public function index(Forum $forum)
     {
-        return response()->json($forum->topics);
+        $forum->load("topics");
+        return response()->json($forum);
     }
 
     /**

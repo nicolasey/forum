@@ -2,7 +2,9 @@
 namespace Nicolasey\Forum\Http\Controller;
 
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Collection;
 use Nicolasey\Forum\Models\Forum;
+use Nicolasey\Forum\Models\Post;
 
 class ForumController extends Controller
 {
@@ -13,7 +15,9 @@ class ForumController extends Controller
      */
     public function index()
     {
-        return Forum::findByParent(null);
+        $forums = Forum::where('parent_id', null)->get();
+        $forums = $forums->load("children");
+        return $forums;
     }
 
     /**
@@ -24,6 +28,12 @@ class ForumController extends Controller
      */
     public function show(Forum $forum)
     {
+        $forum->load([
+            'children',
+            'topics',
+            'children.lastPost',
+            'children.lastPost.topic'
+        ]);
         return $forum;
     }
 
@@ -37,7 +47,17 @@ class ForumController extends Controller
     {
         try {
             $data = request()->only(['name', "content"]);
+
+            $parent = (request()->only("parent_id")) ? request()->only("parent_id")['parent_id'] : null;
+            $parent = Forum::find($parent);
+
             $forum = Forum::create($data);
+
+            if($parent) {
+                $forum->parent_id = $parent->id;
+                $forum->save();
+            }
+
             return $forum;
         } catch (\Exception $exception) {
             throw $exception;
@@ -48,13 +68,36 @@ class ForumController extends Controller
      * Update a forum
      *
      * @param Forum $forum
+     * @return mixed
      * @throws \Exception
      */
     public function update(Forum $forum)
     {
         $data = request()->only(['name', "content"]);
+
+        $parent = (request()->only("parent_id")) ? request()->only("parent_id")['parent_id'] : null;
+        $newParent = Forum::find($parent);
+
+        // Check if forum has to move
+        $hasMoved = ($newParent && ($newParent->id !== $forum->parent_id));
+
         try {
+            if($hasMoved && $forum->last_post) {
+                // Build new breadcrumbs for given
+                $newAncestors = $newParent->getAncestors();
+                $newAncestors->prepend($newParent);
+
+                $this->setAncestorsLastPost($newAncestors, $forum->lastPost);
+            }
+
             $forum->update($data);
+
+            if($hasMoved && $forum->last_post) {
+                $ancestors = $forum->getAncestors();
+                $this->setAncestorsLastPost($ancestors, $forum->lastPost);
+            }
+
+            return $forum;
         } catch (\Exception $exception) {
             throw $exception;
         }
@@ -70,10 +113,45 @@ class ForumController extends Controller
     public function destroy(Forum $forum)
     {
         try {
+            $ancestors = $forum->getAncestors();
+            $first = $ancestors->first();
+            $lastPostIsAncestorLastPost = ($forum->last_post === $first->last_post);
+
+            if($lastPostIsAncestorLastPost) {
+                $lastPost = $this->evaluateNewLastPost($first);
+                $this->setAncestorsLastPost($ancestors, $lastPost);
+            }
+
             $forum->delete();
             return response()->json();
         } catch (\Exception $exception) {
             throw $exception;
+        }
+    }
+
+    private function evaluateNewLastPost(Forum $forum): Post
+    {
+        // topics
+        // children
+        // evaluate
+        // return Post
+    }
+
+    /**
+     * Set last post for ancestors
+     *
+     * @param Collection $ancestors
+     * @param Post $post
+     */
+    private function setAncestorsLastPost(Collection $ancestors, Post $post)
+    {
+        foreach ($ancestors as $ancestor) {
+            // if ancestor last post is newer, then we stop
+            $ancestorLastPostIsNewer = ($ancestor->lastPost->id > $post->id);
+            if($ancestorLastPostIsNewer) break;
+
+            // Otherwise save this lastPost as last for the ancestor, and continue
+            $ancestor->last_post = $post->id;
         }
     }
 }
