@@ -42,9 +42,8 @@ class TestCase extends Base
             'database' => $this->tempDirectory.'/database.sqlite',
             'prefix' => '',
         ]);
-        $app['config']->set('auth.providers.users.model', User::class);
         $app['config']->set('app.key', '6rE9Nz59bGRbeMATftriyQjrpF7DcOQm');
-        $app['config']->set('crm.manager.class', User::class);
+        $app['config']->set('forum.author.class', User::class);
     }
 
     protected function setUpDatabase()
@@ -65,6 +64,7 @@ class TestCase extends Base
             $this->app['db']->connection()->getSchemaBuilder()->create($tableName, function (Blueprint $table) use ($tableName) {
                 $table->increments('id');
                 $table->string('name')->nullable();
+                $table->unsignedSmallInteger("nb_posts")->default(0);
                 $table->timestamps();
                 $table->softDeletes();
             });

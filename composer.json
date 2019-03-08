@@ -31,7 +31,8 @@
         "illuminate/routing": "~5.6|~5.7",
         "illuminate/support": "~5.6|~5.7",
         "kalnoy/nestedset": "^4.3",
-        "spatie/laravel-sluggable": "^2.1"
+        "spatie/laravel-sluggable": "^2.1",
+        "spatie/eloquent-sortable": "^3.4"
     },
     "require-dev": {
         "mockery/mockery": "^1.1",

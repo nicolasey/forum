@@ -4,12 +4,14 @@ namespace Nicolasey\Forum\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
+use Spatie\EloquentSortable\Sortable;
+use Spatie\EloquentSortable\SortableTrait;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-class Forum extends Model
+class Forum extends Model implements Sortable
 {
-    use NodeTrait, SoftDeletes, HasSlug;
+    use NodeTrait, SoftDeletes, HasSlug, SortableTrait;
 
     protected $guarded = [];
     protected $table = "forum_forums";
@@ -24,6 +26,11 @@ class Forum extends Model
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug');
     }
+
+    public $sortable = [
+        'order_column_name' => 'order',
+        'sort_when_creating' => true,
+    ];
 
     /**
      * Forum's topics

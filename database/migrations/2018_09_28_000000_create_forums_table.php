@@ -19,6 +19,7 @@ class CreateForumsTable extends Migration
             $table->string('slug')->unique();
             $table->text("content")->nullable();
             $table->unsignedMediumInteger("last_post")->nullable();
+            $table->unsignedMediumInteger("order")->nullable();
             $table->timestamps();
             $table->softDeletes();
             // missing nested elements
