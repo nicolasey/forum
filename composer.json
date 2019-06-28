@@ -12,7 +12,6 @@
     "prefer-stable": true,
     "autoload": {
         "classmap": [
-            "database/seeds",
             "database/factories"
         ],
         "psr-4": {
