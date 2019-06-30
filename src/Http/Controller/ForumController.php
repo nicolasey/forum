@@ -30,9 +30,7 @@ class ForumController extends Controller
     {
         $forum->load([
             'children',
-            'topics',
-            'children.lastPost',
-            'children.lastPost.topic'
+            'topics'
         ]);
         return $forum;
     }
