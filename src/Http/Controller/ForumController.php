@@ -116,6 +116,7 @@ class ForumController extends Controller
             $ancestors = $forum->getAncestors();
             $first = $ancestors->first();
             $lastPostIsAncestorLastPost = ($forum->last_post === $first->last_post);
+            dd($forum->last_post);
 
             if($lastPostIsAncestorLastPost) {
                 $lastPost = $this->evaluateNewLastPost($first);
@@ -129,12 +130,26 @@ class ForumController extends Controller
         }
     }
 
-    private function evaluateNewLastPost(Forum $forum): Post
+    private function evaluateNewLastPost(Forum $forum)
     {
         // topics
+        $topics = $forum->topics->pluck('id')->toArray();
+        $lastPost = Post::whereIn('topic_id', $topics)->last();
+
         // children
+        $children = Forum::where('parent_id', $forum->id)->get();
+        $children->load('lastPost');
+
+        // collect all lastPosts
+        $collection = new Collection();
+        foreach ($children as $child) $collection->merge($child->lastPost);
+        $collection->merge($lastPost);
+
         // evaluate
+        $lastPost = $collection->sortBy('id')->last();
+
         // return Post
+        return $lastPost;
     }
 
     /**
