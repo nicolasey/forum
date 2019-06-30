@@ -15,7 +15,7 @@ class Forum extends Model implements Sortable
 
     protected $guarded = [];
     protected $table = "forum_forums";
-    protected $with = ["children", "topics"];
+    protected $with = ["children", "topics","lastPost"];
 
     /**
      * Get the options for generating the slug.
